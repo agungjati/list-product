@@ -1,0 +1,3 @@
+export const FETCHING_PRODUCT = 'FETCHING_PRODUCT'
+export const SET_PRODUCT = 'SET_PRODUCT'
+export const ERROR_PRODUCT = 'ERROR_PRODUCT'
