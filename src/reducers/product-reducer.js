@@ -1,10 +1,11 @@
 
-import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT } from './types'
+import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT , CATEGORY_PRODUCT } from './types'
 
 const initialState = {
-    products : [] , //['Nasi Goreng', 'Ikan Asin', 'Es Teh', 'Prata', 'Tahu Kupat'] ,
+    products : [] , 
     isLoading : false,
-    errMessage : null
+    errMessage : null,
+    sortPrice : 'asc'
 }
 
 const productReducer = ( state = initialState , action) => {
@@ -18,6 +19,11 @@ const productReducer = ( state = initialState , action) => {
             return Object.assign({},
                 state,
                 { products : action.payload , isLoading : false }
+            )
+        case CATEGORY_PRODUCT : 
+            return Object.assign({},
+                state,
+                { products : state.products.filter( s => s.category.id === action.payload ) }
             )
         case ERROR_PRODUCT :
             return Object.assign({},

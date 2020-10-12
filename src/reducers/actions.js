@@ -1,5 +1,6 @@
 
-import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT } from './types'
+import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT , CATEGORY_PRODUCT } from './types'
+import { getProduct } from './product-api'
 
 const setProductsAction = (products) => ({
     type : SET_PRODUCT ,
@@ -11,17 +12,18 @@ const errProduct = (message) => ({
     payload : message
 })
 
+export const filterCategory = (categoryId) => (dispatch) => dispatch({
+    type : CATEGORY_PRODUCT ,
+    payload : categoryId
+})
 
-const fetchProduct = (search) => (dispatch) => {    
+
+export const fetchProduct = (search) => (dispatch) => {    
     dispatch({ type : FETCHING_PRODUCT })
 
-    new Promise((resolve) => {
-        setTimeout( () => {
-            dispatch(setProductsAction([ 'anngur', 'jagung']))
-            resolve()
-        } , 5000)
+    getProduct(search)
+    .then( products => {
+        dispatch(setProductsAction(products))
     })
 
 }
-
-export default fetchProduct

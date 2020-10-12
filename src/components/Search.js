@@ -1,7 +1,7 @@
 import React , { useState } from 'react'
 import { TextField, Paper, Grid, IconButton, Icon } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import fetchProduct from '../reducers/actions'
+import { fetchProduct } from '../reducers/actions'
 import { connect } from 'react-redux'
 
 const useStyles = makeStyles(() => ({
@@ -10,8 +10,7 @@ const useStyles = makeStyles(() => ({
     },
     paper: {
         padding: '10px',
-        marginTop: '5px',
-        width: '500px',
+        marginTop: '20px',        
         marginBottom: '20px'
     }
 }));
