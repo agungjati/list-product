@@ -2,7 +2,8 @@ import React, { useState, Fragment } from 'react'
 import { Paper, List, ListItem, ListItemText, Divider, CircularProgress, Slide, MenuItem, Select, FormControl, InputLabel, Grid, IconButton, Icon, Tooltip } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
-import { filterCategory } from '../reducers/actions';
+import { filterProduct , fetchProduct } from '../reducers/actions';
+import Product from './Product'
 
 const useStyles = makeStyles(theme => ({
     formInput: {
@@ -27,11 +28,21 @@ const categories = [
 ]
 
 const ListProduct = (props) => {
-
+    
     const classes = useStyles()
-    const [category, setCategory] = useState(1)
-    const asc = (a, b) => a.price > b.price ? 1 : -1
-    const desc = (a, b) => a.price > b.price ? -1 : 1
+    const [ sort , setSort ] = useState(false)
+    const filter = props.filter
+
+    const changeSelect = (e) => {
+        props.filterProduct({ ...filter , category : e.target.value })
+        props.fetchProduct(props.filter)
+    }
+
+    const sortPrice = () => {
+        props.filterProduct({ ...filter , sortPrice : sort ? 'lowestFirst' : 'highestFirst' })
+        props.fetchProduct(props.filter)
+        setSort(!sort)
+    }
 
     const renderFilter = () => {
         return (
@@ -39,9 +50,9 @@ const ListProduct = (props) => {
                 <FormControl className={classes.formControl}>
                     <InputLabel >Category</InputLabel>
                     <Select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)} >
-                        <MenuItem value={1}>
+                        value={filter.category}
+                        onChange={changeSelect} >
+                        <MenuItem value={0}>
                             <em>None</em>
                         </MenuItem>
                         {categories.map((c, key) => (
@@ -50,7 +61,7 @@ const ListProduct = (props) => {
                     </Select>
                 </FormControl>
                 <Tooltip title='Sort price'>
-                    <IconButton color="primary" >
+                    <IconButton color="primary" onClick={sortPrice} >
                         <Icon>sort</Icon>
                     </IconButton>
                 </Tooltip>
@@ -60,30 +71,26 @@ const ListProduct = (props) => {
 
     return (<>
         {props.isLoading ? <center><CircularProgress disableShrink /></center> :
+        <>
+            {renderFilter()}
             <Slide direction="up" in={props.products.length > 0} mountOnEnter unmountOnExit> 
                 <div>
-                    {renderFilter()}
-                    <Paper className={classes.paper} >
-                        <List component="nav" >
-                            {props.products.map((product, key) =>
-                                (<Fragment key={key}>
-                                    <ListItem button  >
-                                        <ListItemText
-                                            primary={product.name + '  $' + product.price}
-                                            secondary={product.category.name} />
-                                    </ListItem>
-                                    <Divider />
-                                </Fragment>))}
-                        </List>
-                    </Paper>
+                    
+                    { props.products.map((product, key) => 
+                        <Product product={product} key={key} />
+                    ) }
+                    
                 </div>
             </Slide>
+        </>
+
         }
     </>)
 }
 
 const mapDispatch = (dispatch) => ({
-    filterCategory: (categoryId) => dispatch(filterCategory(categoryId))
+    fetchProduct : (filter) => dispatch(fetchProduct(filter)),
+    filterProduct : (filter) => dispatch(filterProduct(filter))
 })
 
 export default connect((state) => state.product, mapDispatch)(ListProduct)

@@ -1,6 +1,6 @@
 
-import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT , CATEGORY_PRODUCT } from './types'
-import { getProduct } from './product-api'
+import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT , FILTER_PRODUCT } from './types'
+import { getProducts  } from './product-api'
 
 const setProductsAction = (products) => ({
     type : SET_PRODUCT ,
@@ -12,16 +12,15 @@ const errProduct = (message) => ({
     payload : message
 })
 
-export const filterCategory = (categoryId) => (dispatch) => dispatch({
-    type : CATEGORY_PRODUCT ,
-    payload : categoryId
+export const filterProduct = (filter) => (dispatch) => dispatch({
+    type : FILTER_PRODUCT ,
+    payload : filter
 })
 
 
-export const fetchProduct = (search) => (dispatch) => {    
+export const fetchProduct = ({ search , sortPrice , category }) => (dispatch) => {    
     dispatch({ type : FETCHING_PRODUCT })
-
-    getProduct(search)
+    getProducts(search , sortPrice , category)
     .then( products => {
         dispatch(setProductsAction(products))
     })

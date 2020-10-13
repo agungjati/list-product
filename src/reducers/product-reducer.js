@@ -1,11 +1,15 @@
 
-import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT , CATEGORY_PRODUCT } from './types'
+import { FETCHING_PRODUCT , SET_PRODUCT , ERROR_PRODUCT , FILTER_PRODUCT } from './types'
 
 const initialState = {
     products : [] , 
     isLoading : false,
     errMessage : null,
-    sortPrice : 'asc'
+    filter : {
+        search : '',
+        category : 0,
+        sortPrice : 'lowestFirst'
+    }    
 }
 
 const productReducer = ( state = initialState , action) => {
@@ -20,10 +24,10 @@ const productReducer = ( state = initialState , action) => {
                 state,
                 { products : action.payload , isLoading : false }
             )
-        case CATEGORY_PRODUCT : 
+        case FILTER_PRODUCT : 
             return Object.assign({},
                 state,
-                { products : state.products.filter( s => s.category.id === action.payload ) }
+                { filter :  { ...action.payload  } }
             )
         case ERROR_PRODUCT :
             return Object.assign({},
